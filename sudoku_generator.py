@@ -26,7 +26,7 @@ class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board =
+        self.board = self.get_board()
         self.box_length = (row_length ** .5)
 
     '''
@@ -35,8 +35,17 @@ class SudokuGenerator:
 	Parameters: None
 	Return: list[list]
     '''
+    #Each index in the "top" list (which represents rows)
+    #will itself hold a list to represent columns in said row
     def get_board(self):
-        pass
+        board = []
+        for row in range(self.row_length):
+            columns = []
+            for col in range(self.row_length):
+                columns.append(0)
+            board.append(columns)
+        return board
+
 
     '''
 	Displays the board to the console
@@ -46,7 +55,8 @@ class SudokuGenerator:
 	Return: None
     '''
     def print_board(self):
-        pass
+        for row in self.board:
+            print(row)
 
     '''
 	Determines if num is contained in the specified row (horizontal) of the board
@@ -59,7 +69,10 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_row(self, row, num):
-        pass
+        if num in self.board[row]:
+            return True
+        else:
+            return False
 
     '''
 	Determines if num is contained in the specified column (vertical) of the board
