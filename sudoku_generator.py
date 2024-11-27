@@ -39,11 +39,16 @@ class SudokuGenerator:
     #will itself hold a list to represent columns in said row
     def get_board(self):
         board = []
+        i = 0
         for row in range(self.row_length):
             columns = []
             for col in range(self.row_length):
-                columns.append(0)
+                columns.append(i)
+                i += 1
+
             board.append(columns)
+
+
         return board
 
 
@@ -70,9 +75,9 @@ class SudokuGenerator:
     '''
     def valid_in_row(self, row, num):
         if num in self.board[row]:
-            return True
-        else:
             return False
+        else:
+            return True
 
     '''
 	Determines if num is contained in the specified column (vertical) of the board
@@ -85,7 +90,14 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_col(self, col, num):
-        pass
+        col_list = []
+        for row in self.board:
+            col = int(col)
+            col_list.append(row[col])
+        if num in col_list:
+            return False
+        else:
+            return True
 
     '''
 	Determines if num is contained in the 3x3 box specified on the board
@@ -100,7 +112,21 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_box(self, row_start, col_start, num):
-        pass
+        #checks the given row and 2 under
+        row_check = False
+        col_check = False
+        for i in self.board:
+            if num in i and row_start <= self.board.index(i) <= row_start+2:
+                row_check = True
+        for i in self.board:
+            if num in i and col_start <= i.index(num) <= col_start+2:
+                col_check = True
+
+        if row_check and col_check:
+            return False
+        else:
+            return True
+
     
     '''
     Determines if it is valid to enter num at (row, col) in the board
@@ -113,7 +139,20 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def is_valid(self, row, col, num):
-        pass
+        row_check = False
+        col_check = False
+        box_check = False
+        if self.valid_in_row(row, num):
+            row_check = True
+        if self.valid_in_col(col, num):
+            col_check = True
+        if self.valid_in_box(row, col, num):
+            box_check = True
+
+        if row_check and col_check and box_check:
+            return True
+        else:
+            return False
 
     '''
     Fills the specified 3x3 box with values
