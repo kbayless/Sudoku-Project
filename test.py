@@ -16,6 +16,4 @@ from sudoku_generator import *
 board = generate_sudoku(9,0)
 for i in board:
     print(i)
-
-
 print("test") #this doesnt print when it gets stuck
