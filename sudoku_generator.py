@@ -115,39 +115,14 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_box(self, row_start, col_start, num):
-        # #checks the given row and 2 under
-        # #true means number found
-        # row_check = False
-        # col_check = False
-        # for i in self.board:
-        #     if num in i and row_start <= self.board.index(i) <= row_start+2:
-        #         row_check = True
-        # for i in self.board:
-        #     if num in i and col_start <= i.index(num) <= col_start+2:
-        #         col_check = True
-        #
-        # if row_check and col_check:
-        #     return False
-        # else:
-        #     return True
-        for i in range(3):
-            try:
-                if num == self.board[row_start+i][col_start+i]:
+        #box_row and box_col just find the top left "coordinate" of whatever box is being checked
+        box_row = (row_start // 3) * 3
+        box_col = (col_start // 3) * 3
+        for i in range(3): #iterates through indices 0-2 for rows
+            for j in range(3): # iterates through indices 0-2 for columns
+                if self.board[box_row + i][box_col + j] == num:
                     return False
-                if num == self.board[row_start+i][col_start]:
-                    return False
-                if num == self.board[row_start][col_start+i]:
-                    return False
-            except IndexError:
-                if num == self.board[row_start-2 + i][col_start-2 + i]:
-                    return False
-                if num == self.board[row_start-2 + i][col_start]:
-                    return False
-                if num == self.board[row_start][col_start-2 + i]:
-                    return False
-
-        else:
-            return True
+        return True
 
 
     
