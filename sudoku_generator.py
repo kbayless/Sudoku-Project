@@ -114,27 +114,13 @@ class SudokuGenerator:
 	Return: boolean
     '''
     def valid_in_box(self, row_start, col_start, num):
-        # #checks the given row and 2 under
-        # #true means number found
-
+        box_row = (row_start // 3) * 3
+        box_col = (col_start // 3) * 3
         for i in range(3):
-            try:
-                if num == self.board[row_start+i][col_start+i]:
+            for j in range(3):
+                if self.board[box_row + i][box_col + j] == num:
                     return False
-                if num == self.board[row_start+i][col_start]:
-                    return False
-                if num == self.board[row_start][col_start+i]:
-                    return False
-            except IndexError:
-                if num == self.board[row_start-2 + i][col_start-2 + i]:
-                    return False
-                if num == self.board[row_start-2 + i][col_start]:
-                    return False
-                if num == self.board[row_start][col_start-2 + i]:
-                    return False
-
-        else:
-            return True
+        return True
 
 
     
