@@ -60,4 +60,3 @@ class Board:
         if 0 <= x <= 540 and 0 <= y <= 540:
             return y // 60, x // 60
         return None
-
