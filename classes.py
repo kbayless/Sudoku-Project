@@ -9,6 +9,9 @@ class Cell:
         #screen is the pygame display
         self.screen = screen
         self.selected = False
+        self.sketched_value = 0
+        self.user_inputted = None #when a cell is first clicked (and never again after),
+        # we will see if it is 0 or not 0, if its not 0 we can assume it must be a user inputted cell
 
     def set_cell_value(self, value):
         self.value = value
@@ -27,6 +30,11 @@ class Cell:
             font = pygame.font.Font(None, 40)
             text = font.render(str(self.value), True, 'black')
             self.screen.blit(text, (x + 20, y + 10))
+
+        if self.sketched_value != 0:
+            font = pygame.font.Font(None, 20)
+            text = font.render(str(self.sketched_value), True, 'black')
+            self.screen.blit(text, (x+5, y+5))
 
 class Board:
     def __init__(self, width, height, screen, board_data):
@@ -61,3 +69,17 @@ class Board:
             return y // 60, x // 60
         return None
 
+    def clear(self):
+        #can only be done if cell is a user inputted one
+
+        print(self.selected_cell)
+        if self.selected_cell.user_inputted:
+            self.selected_cell.set_cell_value(0)
+
+    def sketch(self, value):
+        if self.selected_cell.user_inputted:
+            self.selected_cell.set_sketched_value(value)
+
+    def place_number(self, value):
+        if self.selected_cell.user_inputted:
+            self.selected_cell.set_cell_value(value)

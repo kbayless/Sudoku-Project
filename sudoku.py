@@ -14,6 +14,7 @@ def main():
     difficulty = None  # 1 = easy, 2 = medium, 3 = hard
     game_started = False
     board = None
+    clock = pygame.time.Clock()
 
     # drawing startmenu
     # creating fonts/surfs to draw on display_surf
@@ -71,27 +72,47 @@ def main():
                         if event.key == pygame.K_ESCAPE:
                             running = False
 
-        if not game_started:
-            display_surface.fill('white')
-            display_surface.blit(title_surf, (50, 90))
-            display_surface.blit(instruction_surf, (110, 250))
-            pygame.draw.rect(display_surface, "orange", easy_rect)
-            pygame.draw.rect(display_surface, "orange", medium_rect)
-            pygame.draw.rect(display_surface, "orange", hard_rect)
+            if not game_started:
+                display_surface.fill('white')
+                display_surface.blit(title_surf, (50, 90))
+                display_surface.blit(instruction_surf, (110, 250))
+                pygame.draw.rect(display_surface, "orange", easy_rect)
+                pygame.draw.rect(display_surface, "orange", medium_rect)
+                pygame.draw.rect(display_surface, "orange", hard_rect)
 
-            display_surface.blit(easy_text, (120, 365))
-            display_surface.blit(medium_text, (257, 365))
-            display_surface.blit(hard_text, (420, 365))
+                display_surface.blit(easy_text, (120, 365))
+                display_surface.blit(medium_text, (257, 365))
+                display_surface.blit(hard_text, (420, 365))
 
-        else:
-            if board:
-                display_surface.fill('white')  # Clear screen before drawing
-            board.draw()
+            else:
+                if board:
+                    display_surface.fill('white')  # Clear screen before drawing
+                board.draw()
+                #number input and stuff goes here?
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    select_row, select_col = board.click(mouse_x, mouse_y)
+                    board.select(select_row,select_col)
+
+                    # this will set each cell as either user inputted or not when its initially selected
+                    if board.selected_cell.value != 0 and board.selected_cell.user_inputted is None:
+                        board.selected_cell.user_inputted = False
+                    elif board.selected_cell.value == 0 and board.selected_cell.user_inputted is None:
+                        board.selected_cell.user_inputted = True
+                    #lemme know if this is a good way to do it?
+
+                    #all testing stuff v
+                    print(board.selected_cell.value)
+                    print(board.selected_cell.user_inputted)
+                    board.place_number(9)
+                    #board.sketch(9)
 
     # just for testing
         #print(difficulty)
 
         # update screen
+
+
         pygame.display.flip()
 
     pygame.quit()
