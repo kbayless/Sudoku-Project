@@ -9,7 +9,7 @@ class Cell:
         #screen is the pygame display
         self.screen = screen
         self.selected = False
-        self.sketched_value = 0
+        self.sketched_value = None
         self.user_inputted = None #when a cell is first clicked (and never again after),
         # we will see if it is 0 or not 0, if its not 0 we can assume it must be a user inputted cell
 
@@ -23,17 +23,29 @@ class Cell:
         cell_size = 60
         x = self.col * cell_size
         y = self.row * cell_size
-        rect_color = (255, 0, 0) if self.selected else (0, 0, 0)
-        pygame.draw.rect(self.screen, rect_color, (x, y, cell_size, cell_size), 2)
+        # if cell is selected, highlight it in red, else it's black
+        if self.selected:
+            rect_color = (255, 0, 0)
+            thickness = 3
+        else:
+            rect_color = (0, 0, 0)
+            thickness = 1
 
-        if self.value != 0:
+        pygame.draw.rect(self.screen, rect_color, (x, y, cell_size, cell_size), thickness)
+
+        if self.user_inputted and self.value:
+            font = pygame.font.Font(None, 40)
+            text = font.render(str(self.value), True, '#777777')
+            self.screen.blit(text, (x + 20, y + 10))
+        
+        elif self.value:
             font = pygame.font.Font(None, 40)
             text = font.render(str(self.value), True, 'black')
-            self.screen.blit(text, (x + 20, y + 10))
+            self.screen.blit(text, (x + 20, y + 10))    
 
-        if self.sketched_value != 0:
-            font = pygame.font.Font(None, 20)
-            text = font.render(str(self.sketched_value), True, 'black')
+        elif self.sketched_value:
+            font = pygame.font.Font(None, 30)
+            text = font.render(str(self.sketched_value), True, 'gray')
             self.screen.blit(text, (x+5, y+5))
 
 class Board:
@@ -50,9 +62,9 @@ class Board:
 
     def draw(self):
         for i in range(10):
-            line_width = 3 if i % 3 == 0 else 1
-            pygame.draw.line(self.screen, "black", (0, i * 60), (540, i * 60), line_width)
-            pygame.draw.line(self.screen, "black", (i * 60, 0), (i * 60, 540), line_width)
+            line_width = 5 if i % 3 == 0 else 1
+            pygame.draw.line(self.screen, "black", (0, i * 60), (540, i * 60), line_width) # horizontal lines
+            pygame.draw.line(self.screen, "black", (i * 60, 0), (i * 60, 540), line_width) # vertical lines
 
         for row in self.cells:
             for cell in row:
@@ -67,7 +79,7 @@ class Board:
     def click(self, x, y):
         if 0 <= x <= 540 and 0 <= y <= 540:
             return y // 60, x // 60
-        return None
+        return None, None
 
     def clear(self):
         #can only be done if cell is a user inputted one
