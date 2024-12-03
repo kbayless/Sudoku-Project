@@ -13,7 +13,7 @@ from sudoku_generator import *
 #stalling occurs somewhere in fill_remaining function (line 232 of sudoku_generator.py)
 #my guess is that it is something to do with the is_valid function (line 164)
 #when it does manage to generate a board, it is NOT valid (check this by looking at each 3x3 set)
-board = generate_sudoku(9,0)
-for i in board:
+solved_board, board = generate_sudoku(9,30)
+for i in solved_board:
     print(i)
 print("test") #this doesnt print when it gets stuck
