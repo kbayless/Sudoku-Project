@@ -83,10 +83,9 @@ class Board:
 
     def clear(self):
         #can only be done if cell is a user inputted one
-
-        print(self.selected_cell)
         if self.selected_cell.user_inputted:
             self.selected_cell.set_cell_value(0)
+            self.selected_cell.set_sketched_value(0)
 
     def sketch(self, value):
         if self.selected_cell.user_inputted:
@@ -95,3 +94,40 @@ class Board:
     def place_number(self, value):
         if self.selected_cell.user_inputted:
             self.selected_cell.set_cell_value(value)
+
+    def reset_to_original(self):
+        prev_row = self.selected_cell.row
+        prev_col = self.selected_cell.col
+        for rows in range(9):
+            for cols in range(9):
+                self.select(rows,cols)
+                self.clear()
+        self.select(prev_row,prev_col)
+
+    def is_full(self):
+        i = 0
+        prev_row = self.selected_cell.row
+        prev_col = self.selected_cell.col
+        for rows in range(9):
+            for cols in range(9):
+                self.select(rows,cols)
+                if self.selected_cell.value == 0:
+                    break
+                else:
+                    i += 1
+        self.select(prev_row, prev_col)
+        if i == 81:
+            #board must be full
+            return True
+        else: return False
+
+    def update_board(self):
+        prev_row = self.selected_cell.row
+        prev_col = self.selected_cell.col
+        for rows in range(9):
+            for cols in range(9):
+                self.select(rows, cols)
+                self.board_data[rows][cols] = self.selected_cell.value
+        self.select(prev_row, prev_col)
+
+

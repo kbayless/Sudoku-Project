@@ -63,7 +63,9 @@ def main():
 
                     # if difficulty selected => create board
                     if difficulty:
-                        game_board = generate_sudoku(9, difficulty)
+                        board = generate_sudoku(9, difficulty)
+                        game_board = board
+                        solved_board = 0
                         board = Board(WINDOW_WIDTH, WINDOW_HEIGHT, display_surface, game_board)
                         game_started = True
 
@@ -118,6 +120,18 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN and board.selected_cell.sketched_value:
                         board.selected_cell.value = board.selected_cell.sketched_value
+
+                #remove number (clear cell)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE:
+                        board.clear()
+
+                    #TESTING
+                    elif event.key == pygame.K_k:
+                        board.reset_to_original()
+                    elif event.key == pygame.K_j:
+                        board.update_board()
+                        print(board.board_data)
 
                 # draw board 
                 display_surface.fill('white')
