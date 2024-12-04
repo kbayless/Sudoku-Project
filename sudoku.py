@@ -18,7 +18,7 @@ def main():
     game_over_screen = False
     board = None
 
-    # drawing startmenu
+    # drawing start menu
     # creating fonts/surfs to draw on display_surf
     title_font = pygame.font.Font(None, 75)
     title_surf = title_font.render("Welcome to Sudoku", True, 'black')
@@ -36,7 +36,7 @@ def main():
     medium_rect = pygame.Rect(220, 350, 100, 50)
     hard_rect = pygame.Rect(370, 350, 100, 50)
 
-    # draw text and recr to surface
+    # draw text and rect to surface
     display_surface.blit(title_surf, (20, 90))
     display_surface.blit(instruction_surf, (90, 250))
     pygame.draw.rect(display_surface, "orange", easy_rect)
@@ -77,6 +77,9 @@ def main():
                             display_surface.fill('white')
                             board.draw()
 
+                            #update display
+                            pygame.display.update()
+
                     elif game_started:
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_ESCAPE:
@@ -102,7 +105,7 @@ def main():
                                 if selected_row < 8: selected_row += 1
 
                     # select cell
-                    if selected_col != None and selected_row != None:
+                    if (selected_row, selected_col) != (None, None):
                         board.select(selected_row, selected_col)
 
                     # this will set each cell as either user inputted or not when its initially selected
@@ -133,6 +136,7 @@ def main():
 
                     # check if board is full
                     if board.is_full():
+                        pygame.time.delay(150)
                         if board.board_data == solved_board:
                             game_won = True
                             game_over = True
@@ -144,9 +148,9 @@ def main():
                     board.draw()
             else:
                 if not game_over_screen:
-                    display_surface.fill('white')
                     font = pygame.font.Font(None, 75)
                     if game_won:
+                        display_surface.fill((170, 242, 178))
                         message = font.render('Game won!', True, 'black')
                         exit_font = pygame.font.Font(None, 50)
                         exit_text = exit_font.render("Exit", True, 'white')
@@ -154,6 +158,7 @@ def main():
                         pygame.draw.rect(display_surface, 'orange', exit_rect)
                         display_surface.blit(exit_text, (237, 365))
                     else:
+                        display_surface.fill((236, 242, 170))
                         message = font.render('Game over :(', True, 'black')
                         restart_font = pygame.font.Font(None, 50)
                         restart_text = restart_font.render("Restart", True, 'white')
@@ -175,6 +180,45 @@ def main():
                     else:
                         if restart_rect.collidepoint(mouse_pos):
                             main()
+
+            # BUTTONS - font / text / rect for buttons
+            if game_started and not game_over:
+                text_font = pygame.font.Font(None, 30)
+                reset_text = text_font.render("Reset", True, "white")
+                initial_restart_text = text_font.render("Restart", True, "white")
+                initial_exit_text = text_font.render("Exit", True, "white")
+
+                # create rect for buttons
+                reset_rect = pygame.Rect(70, 547, 100, 50)
+                initial_restart_rect = pygame.Rect(220, 547, 100, 50)
+                initial_exit_rect = pygame.Rect(370, 547, 100, 50)
+
+                # draw text and rect to surface
+                def draw_buttons():
+                    pygame.draw.rect(display_surface, "orange", reset_rect)
+                    pygame.draw.rect(display_surface, "orange", initial_restart_rect)
+                    pygame.draw.rect(display_surface, "orange", initial_exit_rect)
+
+                    display_surface.blit(reset_text, (90, 562))
+                    display_surface.blit(initial_restart_text, (235, 562))
+                    display_surface.blit(initial_exit_text, (400, 562))
+
+                draw_buttons()
+
+                # button functionalities
+                if event.type == pygame.MOUSEBUTTONUP:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if reset_rect.collidepoint(mouse_pos):
+                        board.reset_to_original()
+                        display_surface.fill('white')
+                        board.draw()
+                        draw_buttons()
+                        pygame.display.flip()
+                    elif initial_restart_rect.collidepoint(mouse_pos):
+                        main()
+                    elif  initial_exit_rect.collidepoint(mouse_pos):
+                        pygame.quit()
+                        exit()
 
         # update screen
         pygame.display.flip()

@@ -292,8 +292,7 @@ removed is the number of cells to clear (set to 0)
 Return: list[list] (a 2D Python list to represent the board)
 '''
 
-#there is a bug at sudoku.fill_values() (specifically fill remaining)
-# i think it is related to the valid in box function
+
 def generate_sudoku(size, removed):
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
